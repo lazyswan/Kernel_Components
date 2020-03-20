@@ -1,20 +1,5 @@
 /*
 Author : Swanand Sapre
-1. Enable Clock Access to Port of the Pin
-2.Set the Pin's Mode to IP/OP*
-3.Special parameters -- Pullups;Pulldown
-
-Refering to Datasheet, 
-PortD-GPIO is connected to AHB1 Bus,
-So we need to supply clock and power this bus before using Port D
-#	RCC_AHB1ENR -bit:3
-# GPIOx_MODER
-# GPIOx_ODR
-
--xxxxxxxxx BackGround ForeGround Thread Design xxxxxxxxxxxxxxxxx-
-main() function is fore ground,
-isr() (systick handler) is in background.
--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-
 
 -xxxxxxxxx Stack Frames xxxxxxxxxxxxxxxxx-
  When Interrrupt Occurs,
@@ -52,31 +37,76 @@ stack-pointer register points to top of stack
 
 #include "stm32f4xx.h"                  // Device header
 
-#define GPIO_DRIVER 0
+#define STACKFRAME 1 
 
-#if GPIO_DRIVER==1
+#if STACKFRAME==1
 #define RED					(1U<<14)
 #define GREEN 			(1U<<12)
 #define RED_BIT 		(1U<<28)
 #define GREEN_BIT 	(1U<<24)
 #define GPIOD_CLOCK (1U<<3)
 
+//Array to hold the values of 8 Wordsize Registers (Context)
+uint32_t green_stack[40];
+uint32_t red_stack[40];
+
+//Stack Pointers to point to top of the Stack
+uint32_t* sp_green_stack=&green_stack[40];
+uint32_t* sp_red_stack=&red_stack[40];
+
+
 volatile uint32_t tick;
 volatile uint32_t _tick;
+
+
 
 void gpio_init();
 void DelayS(uint32_t secounds);
 
+void blink_green_led(){
+	while(1){		
+		GPIOA->ODR ^=GREEN; //toggle the LED with XOR
+			DelayS(1);
+	}	
+}
+
+
+void blink_red_led(){
+	while(1){		
+		GPIOA->ODR ^=RED; //toggle the LED with XOR
+			DelayS(1);
+	}	
+}
+
+
 int main(){
 	gpio_init();
-	while(1){
-			GPIOA->ODR ^=RED; //toggle the LED with XOR
-			DelayS(1);
-		}
+	//Stack Frame for Green_Blink_Function (Context of That Thread)
+	*(--sp_green_stack)=(1U<<24); //xPSR
+	*(--sp_green_stack)= (uint32_t)&blink_green_led; //PC-->FUNCTIONAL POinter
+	*(--sp_green_stack)= (uint32_t)(0X0000000DU);//LR
+	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R12
+	*(--sp_green_stack)= (uint32_t)(0X0000000AU);//R3
+	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R2
+	*(--sp_green_stack)= (uint32_t)(0X0000000AU);//R1
+	*(--sp_green_stack)= (uint32_t)(0X0000000DU);//R0
+	
+	//Stack Frame for Red_Blink_Function(Context of That Thread)
+	*(--sp_red_stack)=(1U<<24); //xPSR
+	*(--sp_red_stack)=(uint32_t) &blink_red_led; //PC
+	*(--sp_red_stack)=(0x0000000BU); //LR
+	*(--sp_red_stack)=(0x0000000EU); //R12
+	*(--sp_red_stack)=(0x0000000EU); //R3
+	*(--sp_red_stack)=(0x0000000EU); //R2
+	*(--sp_red_stack)=(0x0000000FU); //R1
+	*(--sp_red_stack)=(0x0000000FU); //R0
+	blink_green_led();
+	blink_red_led();
+	while(1);
 }
 void gpio_init(){		
 	RCC->AHB1ENR |=GPIOD_CLOCK;
-	GPIOD->MODER |=RED_BIT;
+	GPIOD->MODER |=RED_BIT | GREEN_BIT;
 	SystemCoreClockUpdate(); //Gives Current System Clock
 	SysTick_Config(SystemCoreClock/100U); //1000 for ms | 100 for sec --> because clk is in Mhz
 	__enable_irq(); //Enables the INTR
