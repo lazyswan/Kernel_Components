@@ -1,4 +1,4 @@
-#define SVC_SERVICE_HANDLER 0
+#define SVC_SERVICE_HANDLER 1
 //Defining svc function: Imagine this like system call in OS; We are assigning functions to each system call number 
 #if SVC_SERVICE_HANDLER==1
 int __svc(0x00) svc_service_add(int x, int y);

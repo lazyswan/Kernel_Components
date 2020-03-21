@@ -234,6 +234,56 @@ Thread Control Block (TCB)
 
 	
 -------------------------------------------------------------------------
-
+Scheduler Classification:
 	
+	Static 
+		Thread priority is determined before the system runs.
+	Dynamic
+		Thread Priority is determined during the run time
+		
+	Preemptive
+		Threads can be suspended by interrupts or higher priority threads.
+	Non-Preemptive
+		Thread complete their execution and then only handover/Yeilds to other
+		threads.
+	
+Scheduling Criteria
+	Throughput
+		Tasks completed per unit time.
+	Turnaround Time
+		Time for each Task to complete.
+	Response Time
+		Time from request to first response
+	CPU 
+		% CPU cycles being used
+	wait time
+		Time each task spends in ready Q.
+		
+Good OS should
+	Maximize the Throughput
+	Minimize the Turnaround Time
+	Minimize Response time
+	Maximize CPU Utilization
+	Minimize Scheduling Overhead.
+	
+-------------------------------------------------------------------------
+Context Switching
+	Switching from one thread to another.
+	Saving state of current thread into memory
+	Restoring the state of the new thread.
+	Launching the new Thread.
+	
+Scheduler decides which thread to Run, its a part of Kernel
+
+Kernel functionalities ->
+	Schduling
+	Inter-Thread Communication
+	Synchronization
+	Booting
+	
+-------------------------------------------------------------------------
+Synchornizing activity between 2 or more thread
+Controlling access to program resources
+Implement as a counter with 3-functions 
+	init, SignalWait, SignalSet
 	

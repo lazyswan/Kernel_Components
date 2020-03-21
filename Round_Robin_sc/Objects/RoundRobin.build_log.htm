@@ -21,29 +21,53 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.5.0
 Dialog DLL:      TCM.DLL V1.36.1.0
  
 <h2>Project:</h2>
-T:\RTOS_project\Kernel_Internals\kernel_internals.uvprojx
+T:\RTOS_project\Round_Robin_sc\RoundRobin.uvprojx
 Project File Date:  03/21/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Rebuild target 'STM32-F4'
-assembling startup_stm32f446xx.s...
-compiling svc_service_handler.c...
-svc_service_handler.c(80): warning:  #1-D: last line of file ends without a newline
+Rebuild target 'stm32_f446RE'
+assembling osKernel.s...
+compiling cooperative_semaphore.c...
+cooperative_semaphore.c(25): warning:  #1-D: last line of file ends without a newline
   #endif
-svc_service_handler.c: 1 warning, 0 errors
-compiling stack_frames.c...
-stack_frames.c(171): warning:  #1-D: last line of file ends without a newline
-  #endif //GPIO_DRIVER
-stack_frames.c: 1 warning, 0 errors
+cooperative_semaphore.c: 1 warning, 0 errors
+assembling startup_stm32f446xx.s...
+compiling spinlock_semaphore.c...
+spinlock_semaphore.c(20): warning:  #1-D: last line of file ends without a newline
+  }
+spinlock_semaphore.c: 1 warning, 0 errors
 compiling main.c...
-main.c(104): warning:  #1-D: last line of file ends without a newline
-  #endif //GPIO_DRIVER
-main.c: 1 warning, 0 errors
+osKernel.h(7): warning:  #1295-D: Deprecated declaration osKernelInit - give arg types
+  void osKernelInit();
+osKernel.h(13): warning:  #1-D: last line of file ends without a newline
+  #endif
+main.c(13): warning:  #223-D: function "osThreadYeild" declared implicitly
+  		osThreadYeild();
+main.c(23): warning:  #223-D: function "osSignalWait" declared implicitly
+  		osSignalWait(&semaphore2);
+main.c(25): warning:  #223-D: function "osSignalSet" declared implicitly
+  		osSignalSet(&semaphore1);
+main.c(36): warning:  #223-D: function "osSignalWait" declared implicitly
+  		osSignalWait(&semaphore1);
+main.c(38): warning:  #223-D: function "osSignalSet" declared implicitly
+  		osSignalSet(&semaphore2);
+main.c(46): warning:  #223-D: function "osSemaphoreInit" declared implicitly
+  	osSemaphoreInit(&semaphore1,0);
+main.c: 8 warnings, 0 errors
+compiling osKernel.c...
+osKernel.h(7): warning:  #1295-D: Deprecated declaration osKernelInit - give arg types
+  void osKernelInit();
+osKernel.h(13): warning:  #1-D: last line of file ends without a newline
+  #endif
+osKernel.c(75): warning:  #1-D: last line of file ends without a newline
+  }
+osKernel.c: 3 warnings, 0 errors
 compiling system_stm32f4xx.c...
 linking...
-Program Size: Code=636 RO-data=484 RW-data=12 ZI-data=1636  
-".\Objects\kernel_internals.axf" - 0 Error(s), 3 Warning(s).
+Program Size: Code=948 RO-data=484 RW-data=32 ZI-data=2856  
+FromELF: creating hex file...
+".\Objects\RoundRobin.axf" - 0 Error(s), 13 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -60,7 +84,7 @@ Package Vendor: Keil
    * Component: Startup Version: 2.6.2
 
 <h2>Collection of Component include folders:</h2>
-  .\RTE\_STM32-F4
+  .\RTE\_stm32_f446RE
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
@@ -74,7 +98,7 @@ Package Vendor: Keil
       Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f446xx.s
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
