@@ -31,13 +31,48 @@ stack-pointer register points to top of stack
  Another set values of Register for another Function
  This Function can be reffered as thread.
  
+ Once you compile and enter the Debug mode,
+ We could see the DEAED BEEEF in the memory in memory view
+ 
 -xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-
+ForeGround Threads
+mainfn();
+
+background Threads
+isr1();
+isr2();
+isr3();
+
+RTOS
+Thread Scheduler
+task1();
+task2();
+task3();
+
+Memory Map of Cortex
+
+0x0000_0000
+					--------------     
+					256k Flash ROM     -------------------   4096 Bytes Stack
+															32K RAM :Stack       -----------------
+                             --------------------
+					------------
+					32k RAM
+					------------
+					I/O ports
+					-------------
+					Internal I/O
+					-------------
+0xE004_1FFF
+
+Word Addressable
+PUSH a Word in a stack
 */
 
 
 #include "stm32f4xx.h"                  // Device header
 
-#define STACKFRAME 1 
+#define STACKFRAME 0
 
 #if STACKFRAME==1
 #define RED					(1U<<14)
@@ -114,7 +149,9 @@ void gpio_init(){
 
 //Sys tick handler, ISR executed in everytick intr
 void SysTick_Handler(){
-	++tick;	
+	++tick;
+	//In this handler we change the value of stack pointer to load the differnt context, custom stack frames.
+	
 }
 
 uint32_t getTick(){
