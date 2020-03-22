@@ -1,4 +1,11 @@
+/*
+Author:
+Swanand Sapre
+scsapre@gmail.com
+*/
+
 #include<stdint.h>
+
 void osSemaphoreInit(int32_t *semaphore, int32_t value){
 	*semaphore=value;
 }

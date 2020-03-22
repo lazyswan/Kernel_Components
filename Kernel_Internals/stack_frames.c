@@ -72,7 +72,7 @@ PUSH a Word in a stack
 
 #include "stm32f4xx.h"                  // Device header
 
-#define STACKFRAME 0
+#define STACKFRAME 1
 
 #if STACKFRAME==1
 #define RED					(1U<<14)
@@ -119,22 +119,22 @@ int main(){
 	//Stack Frame for Green_Blink_Function (Context of That Thread)
 	*(--sp_green_stack)=(1U<<24); //xPSR
 	*(--sp_green_stack)= (uint32_t)&blink_green_led; //PC-->FUNCTIONAL POinter
-	*(--sp_green_stack)= (uint32_t)(0X0000000DU);//LR
-	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R12
-	*(--sp_green_stack)= (uint32_t)(0X0000000AU);//R3
-	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R2
-	*(--sp_green_stack)= (uint32_t)(0X0000000AU);//R1
-	*(--sp_green_stack)= (uint32_t)(0X0000000DU);//R0
+	*(--sp_green_stack)= (uint32_t)(0X0000000CU);//LR
+	*(--sp_green_stack)= (uint32_t)(0X00000000U);//R12
+	*(--sp_green_stack)= (uint32_t)(0X0000000FU);//R3
+	*(--sp_green_stack)= (uint32_t)(0X0000000FU);//R2
+	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R1
+	*(--sp_green_stack)= (uint32_t)(0X0000000EU);//R0
 	
 	//Stack Frame for Red_Blink_Function(Context of That Thread)
 	*(--sp_red_stack)=(1U<<24); //xPSR
 	*(--sp_red_stack)=(uint32_t) &blink_red_led; //PC
 	*(--sp_red_stack)=(0x0000000BU); //LR
 	*(--sp_red_stack)=(0x0000000EU); //R12
-	*(--sp_red_stack)=(0x0000000EU); //R3
+	*(--sp_red_stack)=(0x0000000DU); //R3
 	*(--sp_red_stack)=(0x0000000EU); //R2
-	*(--sp_red_stack)=(0x0000000FU); //R1
-	*(--sp_red_stack)=(0x0000000FU); //R0
+	*(--sp_red_stack)=(0x0000000AU); //R1
+	*(--sp_red_stack)=(0x0000000DU); //R0
 	blink_green_led();
 	blink_red_led();
 	while(1);
@@ -150,7 +150,8 @@ void gpio_init(){
 //Sys tick handler, ISR executed in everytick intr
 void SysTick_Handler(){
 	++tick;
-	//In this handler we change the value of stack pointer to load the differnt context, custom stack frames.
+	//In this handler we change the value of stack pointer to load the 
+	//differnt context, custom stack frames.
 	
 }
 
